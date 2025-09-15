@@ -1,0 +1,54 @@
+package main import ( "context" "log" "net/http" "os" "os/signal" "syscall" "time" . "zjutjh/Join-Us/config" _ "zjutjh/Join-Us/db" . "zjutjh/Join-Us/router" JHLog "zjutjh/Join-Us/utility/log" ) func main() { var server *http.Server var port string = ":" + Config.Server.Port log.SetOutput(JHLog.LogMultiWriter) log.Println("Running Server at", port) server = &http.Server{ Addr: port, Handler: Router, } go func() { if err := server.ListenAndServe(); err != nil && err != http.ErrServerClosed { log.Fatalf("Listen: %s\n", err) } }() quit := make(chan os.Signal) signal.Notify(quit, os.Interrupt, syscall.SIGTERM) <-quit log.Println("Shutdown Server ...") ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second) defer cancel() if err := server.Shutdown(ctx); err != nil { log.Fatal("Server Shutdown:", err) } log.Println("Server Exiting") }
+
+
+
+（竖起耳朵看代码）这个 main.go 文件就是整个项目的程序入口，它主要做的事情是：启动一个 HTTP 服务，然后优雅地处理退出信号。汪~
+
+我帮你拆一下：
+
+导入包
+
+context：用来做超时、取消之类的控制。
+
+net/http：Go 自带的 HTTP 服务。
+
+os, os/signal, syscall：用来接收退出信号，比如 Ctrl+C 或系统发的 kill 信号。
+
+. "zjutjh/Join-Us/config"：导入配置文件里的东西（点导入，直接用名字就行）。
+
+_ "zjutjh/Join-Us/db"：只执行 db 包的 init()，用来初始化数据库，但代码里不会直接用它。
+
+. "zjutjh/Join-Us/router"：导入路由（Router）。
+
+JHLog：自定义日志工具。
+
+main 函数流程
+
+设置日志输出到 JHLog.LogMultiWriter（可能同时输出到文件和控制台）。
+
+从配置里取端口号，拼接成 :8080 这样的格式。
+
+定义 HTTP 服务器 server = &http.Server{Addr: port, Handler: Router}，把路由交给 Router 处理。
+
+开一个 goroutine 去 server.ListenAndServe()，这样不会阻塞主线程。
+
+主线程创建一个 quit 通道，监听系统信号（os.Interrupt, SIGTERM），等到有人按下 Ctrl+C 或收到 kill 信号。
+
+收到退出信号后，打印日志“Shutdown Server ...”。
+
+用 context.WithTimeout 设置一个 5 秒的超时，优雅关闭 server（保证正在跑的请求能处理完）。
+
+最后打印“Server Exiting”。
+
+总结：
+这是一个标准的 Go Web 服务启动模板：
+
+开启 HTTP 服务
+
+捕获退出信号
+
+优雅关闭
+
+这样服务器就不会因为强制退出而中断正在处理的请求。汪~【认真解释】【尾巴轻轻摆动】
+
+姐姐要不要我帮你画一个执行流程图，把“启动 → 等信号 → 优雅退出”串起来呀，汪~

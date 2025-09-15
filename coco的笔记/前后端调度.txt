@@ -1,0 +1,33 @@
+用户点按钮 → 前端发请求 → 后端路由处理 → controller 返回结果 → 前端更新页面
+
+[用户点击提交按钮]
+           │
+           ▼
+[Vue 方法调用]  ---> methods: { submitForm() { axios.post("/api/new_normal", data) } }
+           │
+           ▼
+[浏览器发送 HTTP 请求]
+           │
+           ▼
+[后端 http.Server 收到请求 (:8080)]
+           │
+           ▼
+[Router 路由表匹配 URL "/api/new_normal"]
+           │
+           ▼
+[中间件 middleware.VerifyCaptcha] --- 验证失败 → 返回错误 JSON
+           │
+   (通过验证)
+           ▼
+[controller.NewNormalForm] --- 处理业务逻辑（存数据库/调用 service）
+           │
+           ▼
+[返回 JSON: { "message": "提交成功" }]
+           │
+           ▼
+[前端 axios.then(res => { this.msg = res.data.message })]
+           │
+           ▼
+[Vue 响应式更新页面 → 显示提示信息]
+
+
