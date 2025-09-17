@@ -1,3 +1,10 @@
+/*
+@auther: MucheXD
+这个程序实现了监听http://localhost:8080/hello
+并返回Backend Process Success
+纯测试程序
+*/
+
 package main
 
 import (
