@@ -38,6 +38,7 @@ func main() {
 	//r.Handle("Get", "/hello", SayHello)
 	r.GET("/hello", func(c *gin.Context) {
 		c.String(200, "1111")
+		c.String(200, "2222")
 	})
 
 	// 启动服务并监听,只接受一个 ip:port 格式的 string 参数，表示服务运行的 ip 地址和端口号
