@@ -1,0 +1,2811 @@
+openapi: 3.0.1
+info:
+  description: ""
+  title: JHEntryTrial
+  version: 1.0.0
+servers:
+- url: /
+tags:
+- name: 账户管理
+- name: 账户管理/登录注册
+- name: 账户管理/登录注册/邮箱相关
+- name: 账户管理/个人信息
+- name: 问题反馈
+- name: 管理面板
+- name: 管理面板/超管面板
+- name: 管理面板/超管面板/用户
+- name: 管理面板/预设
+paths:
+  /api/auth/login:
+    post:
+      deprecated: false
+      description: 学生或管理员登录系统
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            examples: {}
+            schema:
+              $ref: '#/components/schemas/_api_auth_login_post_request'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/_api_auth_login_post_200_response'
+          description: 登录成功
+          x-apifox-name: 成功
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/_api_auth_login_post_401_response'
+          description: 认证失败
+          x-apifox-name: 没有权限
+      security: []
+      summary: combo登录接口
+      tags:
+      - 账户管理/登录注册
+      x-apifox-folder: 账户管理/登录注册
+      x-apifox-status: released
+      x-run-in-apifox: https://apifox.com/web/project/7138393/apis/api-352721719-run
+  /api/auth/register:
+    post:
+      deprecated: false
+      description: 学生用户注册账号（管理员账号由超级管理员创建）
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            examples: {}
+            schema:
+              $ref: '#/components/schemas/_api_auth_register_post_request'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/_api_auth_register_post_200_response'
+          description: 注册成功
+          x-apifox-name: 成功
+      security: []
+      summary: 学生注册接口
+      tags:
+      - 账户管理/登录注册
+      x-apifox-folder: 账户管理/登录注册
+      x-apifox-status: released
+      x-run-in-apifox: https://apifox.com/web/project/7138393/apis/api-352721720-run
+  /api/user/info:
+    get:
+      deprecated: false
+      description: 获取当前登录用户的个人信息
+      parameters: []
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/_api_user_info_get_200_response'
+          description: 获取成功
+          x-apifox-name: 成功
+      security: []
+      summary: 获取个人信息
+      tags:
+      - 账户管理/个人信息
+      x-apifox-folder: 账户管理/个人信息
+      x-apifox-status: released
+      x-run-in-apifox: https://apifox.com/web/project/7138393/apis/api-352721724-run
+    put:
+      deprecated: false
+      description: 更新当前登录用户的个人信息
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            examples: {}
+            schema:
+              $ref: '#/components/schemas/_api_user_info_put_request'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/_api_auth_login_post_401_response'
+          description: 更新成功
+          x-apifox-name: 成功
+      security: []
+      summary: 更新个人信息
+      tags:
+      - 账户管理/个人信息
+      x-apifox-folder: 账户管理/个人信息
+      x-apifox-status: released
+      x-run-in-apifox: https://apifox.com/web/project/7138393/apis/api-352721725-run
+  /api/upload/image:
+    post:
+      deprecated: false
+      description: 上传反馈相关图片，后端会进行去重处理
+      parameters:
+      - description: ""
+        example: multipart/form-data
+        explode: false
+        in: header
+        name: Content-Type
+        required: false
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          multipart/form-data:
+            examples: {}
+            schema:
+              $ref: '#/components/schemas/_api_upload_image_post_request'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/_api_upload_image_post_200_response'
+          description: 上传成功
+          x-apifox-name: 成功
+      security: []
+      summary: 上传图片
+      tags:
+      - 问题反馈
+      x-apifox-folder: 问题反馈
+      x-apifox-status: released
+      x-run-in-apifox: https://apifox.com/web/project/7138393/apis/api-352721728-run
+  /api/feedback:
+    get:
+      deprecated: false
+      description: |-
+        获取当前账户对应的反馈记录
+        包括学生和管理，管理获取全局
+
+        学生只填id即可，复杂的请求参数是给大屏筛选的
+      parameters:
+      - description: 页码
+        explode: true
+        in: query
+        name: page
+        required: true
+        schema:
+          default: 1
+          type: number
+        style: form
+      - description: 每页条数
+        explode: true
+        in: query
+        name: size
+        required: true
+        schema:
+          default: 10
+          type: number
+        style: form
+      - description: 反馈学生id
+        explode: true
+        in: query
+        name: id
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: 搜索关键词 可能难以实现
+        explode: true
+        in: query
+        name: keywords
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: 接单状态
+        explode: true
+        in: query
+        name: status
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: 紧急程度
+        explode: true
+        in: query
+        name: urgency
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: 分类
+        explode: true
+        in: query
+        name: category
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: 显示垃圾信息
+        example: "false"
+        explode: true
+        in: query
+        name: isSpam
+        required: false
+        schema:
+          type: boolean
+        style: form
+      - description: 创建时间头
+        explode: true
+        in: query
+        name: createdFrom
+        required: false
+        schema:
+          format: date-time
+          type: string
+        style: form
+      - description: 创建时间尾
+        explode: true
+        in: query
+        name: createdTo
+        required: false
+        schema:
+          format: date-time
+          type: string
+        style: form
+      - description: 更新时间头
+        explode: true
+        in: query
+        name: updatedFrom
+        required: false
+        schema:
+          format: date-time
+          type: string
+        style: form
+      - description: 更新时间尾
+        explode: true
+        in: query
+        name: updatedTo
+        required: false
+        schema:
+          format: date-time
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/_api_feedback_get_200_response'
+          description: 获取成功
+          x-apifox-name: 成功
+      security: []
+      summary: 查询反馈记录
+      tags:
+      - 问题反馈
+      x-apifox-folder: 问题反馈
+      x-apifox-status: developing
+      x-run-in-apifox: https://apifox.com/web/project/7138393/apis/api-352721734-run
+    post:
+      deprecated: false
+      description: 学生提交反馈信息，可包含图片
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            examples: {}
+            schema:
+              $ref: '#/components/schemas/_api_feedback_post_request'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/_api_feedback_post_200_response'
+          description: 提交成功
+          x-apifox-name: 成功
+      security: []
+      summary: 提交反馈
+      tags:
+      - 问题反馈
+      x-apifox-folder: 问题反馈
+      x-apifox-status: released
+      x-run-in-apifox: https://apifox.com/web/project/7138393/apis/api-352721727-run
+  /api/feedback/{id}:
+    get:
+      deprecated: false
+      description: 获取指定反馈的详细信息
+      parameters:
+      - description: 反馈ID
+        example: ""
+        explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/_api_feedback__id__get_200_response'
+          description: 获取成功
+          x-apifox-name: 成功
+      security: []
+      summary: 反馈详情
+      tags:
+      - 问题反馈
+      x-apifox-folder: 问题反馈
+      x-apifox-status: released
+      x-run-in-apifox: https://apifox.com/web/project/7138393/apis/api-352721729-run
+  /api/feedback/{id}/accept:
+    put:
+      deprecated: false
+      description: 管理员接单处理反馈或撤销接单
+      parameters:
+      - description: 反馈ID
+        example: ""
+        explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            examples: {}
+            schema:
+              $ref: '#/components/schemas/_api_feedback__id__accept_put_request'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/_api_auth_login_post_401_response'
+          description: 操作成功
+          x-apifox-name: 成功
+      security: []
+      summary: 接单/撤销接单
+      tags:
+      - 问题反馈
+      x-apifox-folder: 问题反馈
+      x-apifox-status: released
+      x-run-in-apifox: https://apifox.com/web/project/7138393/apis/api-352721730-run
+  /api/feedback/{id}/mark-spam:
+    post:
+      deprecated: false
+      description: 管理员标记反馈为垃圾信息
+      parameters:
+      - description: 反馈ID
+        example: ""
+        explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            examples: {}
+            schema:
+              $ref: '#/components/schemas/_api_feedback__id__mark_spam_post_request'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/_api_auth_login_post_401_response'
+          description: 标记成功
+          x-apifox-name: 成功
+      security: []
+      summary: 标记垃圾信息
+      tags:
+      - 问题反馈
+      x-apifox-folder: 问题反馈
+      x-apifox-status: released
+      x-run-in-apifox: https://apifox.com/web/project/7138393/apis/api-352721731-run
+  /api/feedback/{id}/reply:
+    post:
+      deprecated: false
+      description: 管理员回复反馈并更新状态
+      parameters:
+      - description: 反馈ID
+        example: ""
+        explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            examples: {}
+            schema:
+              $ref: '#/components/schemas/_api_feedback__id__reply_post_request'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/_api_auth_login_post_401_response'
+          description: 回复成功
+          x-apifox-name: 成功
+      security: []
+      summary: 回复反馈
+      tags:
+      - 问题反馈
+      x-apifox-folder: 问题反馈
+      x-apifox-status: released
+      x-run-in-apifox: https://apifox.com/web/project/7138393/apis/api-352721732-run
+  /api/feedback/{id}/evaluate:
+    post:
+      deprecated: false
+      description: 学生对已处理的反馈进行评价
+      parameters:
+      - description: 反馈ID
+        example: ""
+        explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/_api_feedback__id__evaluate_post_request'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/_api_auth_login_post_401_response'
+          description: 评价成功
+          x-apifox-name: 成功
+      security: []
+      summary: 评价反馈
+      tags:
+      - 问题反馈
+      x-apifox-folder: 问题反馈
+      x-apifox-status: released
+      x-run-in-apifox: https://apifox.com/web/project/7138393/apis/api-352721733-run
+  /api/admin/users:
+    get:
+      deprecated: false
+      description: |-
+        超级管理员查看所有用户账号
+        使用 管理面板 - 超管面板 - 用户 - 获取用户列表 接口即可
+      parameters:
+      - description: ""
+        explode: true
+        in: query
+        name: page
+        required: false
+        schema:
+          default: 1
+          type: number
+        style: form
+      - description: ""
+        explode: true
+        in: query
+        name: size
+        required: false
+        schema:
+          default: 10
+          type: number
+        style: form
+      - description: ""
+        explode: true
+        in: query
+        name: userType
+        required: false
+        schema:
+          enum:
+          - student
+          - admin
+          type: string
+        style: form
+      - description: ""
+        explode: true
+        in: query
+        name: keyword
+        required: false
+        schema:
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/_api_admin_users_get_200_response'
+          description: 获取成功
+          x-apifox-name: 成功
+      security: []
+      summary: （已弃用）用户管理列表
+      tags:
+      - 管理面板
+      x-apifox-folder: 管理面板
+      x-apifox-status: released
+      x-run-in-apifox: https://apifox.com/web/project/7138393/apis/api-352721736-run
+    post:
+      deprecated: false
+      description: 超级管理员创建账号
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            examples: {}
+            schema:
+              $ref: '#/components/schemas/_api_admin_users_post_request'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/_api_admin_users_post_200_response'
+          description: 创建成功
+          x-apifox-name: 成功
+      security: []
+      summary: 新增用户
+      tags:
+      - 管理面板/超管面板/用户
+      x-apifox-folder: 管理面板/超管面板/用户
+      x-apifox-status: released
+      x-run-in-apifox: https://apifox.com/web/project/7138393/apis/api-352721740-run
+  /api/admin/users/{id}:
+    delete:
+      deprecated: false
+      description: 超级管理员删除用户账号
+      parameters:
+      - description: 用户ID
+        example: ""
+        explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/_api_auth_login_post_401_response'
+          description: 删除成功
+          x-apifox-name: 成功
+      security: []
+      summary: 删除用户
+      tags:
+      - 管理面板/超管面板/用户
+      x-apifox-folder: 管理面板/超管面板/用户
+      x-apifox-status: released
+      x-run-in-apifox: https://apifox.com/web/project/7138393/apis/api-352721742-run
+    put:
+      deprecated: false
+      description: 超级管理员编辑用户信息
+      parameters:
+      - description: 用户ID
+        example: ""
+        explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/_api_admin_users__id__put_request'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/_api_auth_login_post_401_response'
+          description: 更新成功
+          x-apifox-name: 成功
+      security: []
+      summary: 编辑用户
+      tags:
+      - 管理面板/超管面板/用户
+      x-apifox-folder: 管理面板/超管面板/用户
+      x-apifox-status: released
+      x-run-in-apifox: https://apifox.com/web/project/7138393/apis/api-352721741-run
+  /api/admin/users/{id}/permission:
+    get:
+      deprecated: false
+      description: 获取用户权限
+      parameters:
+      - description: 用户id
+        explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              example:
+                code: 200
+                message: 读取成功
+                data:
+                  userId: "9"
+                  name: 屈开慧
+                  userType: voluptate laboris
+                  department: ut reprehenderit aliquip
+                  permission: "10000011"
+              schema:
+                $ref: '#/components/schemas/_api_admin_users__id__permission_get_200_response'
+          description: ""
+          x-apifox-name: 成功
+      security: []
+      summary: 获取用户权限
+      tags:
+      - 管理面板/超管面板/用户
+      x-apifox-folder: 管理面板/超管面板/用户
+      x-apifox-status: testing
+      x-run-in-apifox: https://apifox.com/web/project/7138393/apis/api-353001564-run
+    put:
+      deprecated: false
+      description: 编辑用户权限
+      parameters:
+      - description: ""
+        explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            examples: {}
+            schema:
+              $ref: '#/components/schemas/_api_admin_users__id__permission_put_request'
+      responses:
+        "200":
+          content:
+            application/json:
+              example:
+                code: 200
+                message: 编辑成功
+                data:
+                  userId: "9"
+                  name: 屈开慧
+                  userType: voluptate laboris
+                  department: ut reprehenderit aliquip
+                  permission: "10000011"
+              schema:
+                $ref: '#/components/schemas/_api_admin_users__id__permission_put_200_response'
+          description: ""
+          x-apifox-name: 成功
+      security: []
+      summary: 编辑用户权限
+      tags:
+      - 管理面板/超管面板/用户
+      x-apifox-folder: 管理面板/超管面板/用户
+      x-apifox-status: testing
+      x-run-in-apifox: https://apifox.com/web/project/7138393/apis/api-353005011-run
+  /api/feedback/spam/pending:
+    get:
+      deprecated: false
+      description: 超级管理员查看待审核的垃圾信息
+      parameters:
+      - description: ""
+        explode: true
+        in: query
+        name: page
+        required: false
+        schema:
+          default: 1
+          type: number
+        style: form
+      - description: ""
+        explode: true
+        in: query
+        name: size
+        required: false
+        schema:
+          default: 10
+          type: number
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/_api_feedback_spam_pending_get_200_response'
+          description: 获取成功
+          x-apifox-name: 成功
+      security: []
+      summary: 获取待审核垃圾信息
+      tags:
+      - 管理面板/超管面板
+      x-apifox-folder: 管理面板/超管面板
+      x-apifox-status: released
+      x-run-in-apifox: https://apifox.com/web/project/7138393/apis/api-352721738-run
+  /api/feedback/spam/review:
+    post:
+      deprecated: false
+      description: 超级管理员审核标记的垃圾信息
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            examples: {}
+            schema:
+              $ref: '#/components/schemas/_api_feedback_spam_review_post_request'
+      responses:
+        "200":
+          content:
+            application/json:
+              example:
+                code: 200
+                message: 审核成功
+                type: 垃圾
+              schema:
+                $ref: '#/components/schemas/_api_feedback_spam_review_post_200_response'
+          description: 审核成功
+          x-apifox-name: 成功
+      security: []
+      summary: 审核垃圾信息
+      tags:
+      - 管理面板/超管面板
+      x-apifox-folder: 管理面板/超管面板
+      x-apifox-status: released
+      x-run-in-apifox: https://apifox.com/web/project/7138393/apis/api-352721739-run
+  /api/reply-templates:
+    delete:
+      deprecated: false
+      description: 删除指定的预设回复模板
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            examples: {}
+            schema:
+              $ref: '#/components/schemas/_api_reply_templates_delete_request'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/_api_auth_login_post_401_response'
+          description: 删除成功
+          x-apifox-name: 成功
+      security: []
+      summary: 删除预设回复
+      tags:
+      - 管理面板/预设
+      x-apifox-folder: 管理面板/预设
+      x-apifox-status: released
+      x-run-in-apifox: https://apifox.com/web/project/7138393/apis/api-352721744-run
+    get:
+      deprecated: false
+      description: 获取所有预设回复模板
+      parameters: []
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/_api_reply_templates_get_200_response'
+          description: 获取成功
+          x-apifox-name: 成功
+      security: []
+      summary: 获取预设回复列表
+      tags:
+      - 管理面板/预设
+      x-apifox-folder: 管理面板/预设
+      x-apifox-status: released
+      x-run-in-apifox: https://apifox.com/web/project/7138393/apis/api-352721746-run
+    post:
+      deprecated: false
+      description: 创建新的预设回复模板
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            examples: {}
+            schema:
+              $ref: '#/components/schemas/_api_reply_templates_post_request'
+      responses:
+        "200":
+          content:
+            application/json:
+              example:
+                code: 200
+                message: 创建成功
+                data:
+                  id: "5"
+              schema:
+                $ref: '#/components/schemas/_api_reply_templates_post_200_response'
+          description: 创建成功
+          x-apifox-name: 成功
+      security: []
+      summary: 新增预设回复
+      tags:
+      - 管理面板/预设
+      x-apifox-folder: 管理面板/预设
+      x-apifox-status: released
+      x-run-in-apifox: https://apifox.com/web/project/7138393/apis/api-352721743-run
+    put:
+      deprecated: false
+      description: 更新预设回复模板
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            examples: {}
+            schema:
+              $ref: '#/components/schemas/_api_reply_templates_put_request'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/_api_auth_login_post_401_response'
+          description: 更新成功
+          x-apifox-name: 成功
+      security: []
+      summary: 编辑预设回复
+      tags:
+      - 管理面板/预设
+      x-apifox-folder: 管理面板/预设
+      x-apifox-status: released
+      x-run-in-apifox: https://apifox.com/web/project/7138393/apis/api-352721745-run
+  /api/feedback/admin:
+    get:
+      deprecated: false
+      description: |-
+        管理员查看所有反馈记录
+        使用 问题反馈 - 查询反馈记录 接口即可
+      parameters:
+      - description: ""
+        explode: true
+        in: query
+        name: page
+        required: false
+        schema:
+          default: 1
+          type: number
+        style: form
+      - description: ""
+        explode: true
+        in: query
+        name: size
+        required: false
+        schema:
+          default: 10
+          type: number
+        style: form
+      - description: ""
+        explode: true
+        in: query
+        name: status
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: ""
+        explode: true
+        in: query
+        name: category
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: ""
+        explode: true
+        in: query
+        name: keyword
+        required: false
+        schema:
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/_api_feedback_admin_get_200_response'
+          description: 获取成功
+          x-apifox-name: 成功
+      security: []
+      summary: （已弃用）管理员反馈列表
+      tags:
+      - 管理面板
+      x-apifox-folder: 管理面板
+      x-apifox-status: released
+      x-run-in-apifox: https://apifox.com/web/project/7138393/apis/api-352721735-run
+  /api/statistics/feedback:
+    get:
+      deprecated: false
+      description: |-
+        获取反馈相关统计数据，用于可视化大屏
+        使用 问题反馈 - 查询反馈记录 接口即可
+      parameters:
+      - description: 开始日期
+        explode: true
+        in: query
+        name: startDate
+        required: false
+        schema:
+          format: date
+          type: string
+        style: form
+      - description: 结束日期
+        explode: true
+        in: query
+        name: endDate
+        required: false
+        schema:
+          format: date
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/_api_statistics_feedback_get_200_response'
+          description: 获取成功
+          x-apifox-name: 成功
+      security: []
+      summary: （已弃用）反馈统计数据
+      tags:
+      - 管理面板
+      x-apifox-folder: 管理面板
+      x-apifox-status: released
+      x-run-in-apifox: https://apifox.com/web/project/7138393/apis/api-352721737-run
+components:
+  schemas:
+    YongHuXinXi:
+      properties:
+        data:
+          $ref: '#/components/schemas/YongHuXinXi_data'
+      type: object
+      x-apifox-orders:
+      - data
+      x-apifox-ignore-properties: []
+      x-apifox-folder: ""
+    _api_auth_login_post_request:
+      properties:
+        username:
+          description: 用户名/学号
+          type: string
+        password:
+          description: 密码
+          type: string
+        userType:
+          description: 用户类型
+          enum:
+          - student
+          - admin
+          type: string
+        remenberMe:
+          description: 记住我
+          title: 记住我
+          type: string
+      required:
+      - password
+      - remenberMe
+      - userType
+      - username
+      type: object
+      x-apifox-orders:
+      - username
+      - password
+      - userType
+      - remenberMe
+      x-apifox-ignore-properties: []
+    _api_auth_login_post_200_response_data:
+      example:
+        userType: student
+        userId: userId
+        token: token
+        username: username
+      properties:
+        token:
+          description: JWT令牌
+          type: string
+        userId:
+          description: 用户ID
+          type: string
+        username:
+          type: string
+        userType:
+          enum:
+          - student
+          - admin
+          - super_admin
+          type: string
+      type: object
+      x-apifox-orders:
+      - token
+      - userId
+      - username
+      - userType
+      x-apifox-ignore-properties: []
+    _api_auth_login_post_200_response:
+      example:
+        code: 0.8008281904610115
+        data:
+          userType: student
+          userId: userId
+          token: token
+          username: username
+        message: message
+      properties:
+        code:
+          type: number
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/_api_auth_login_post_200_response_data'
+      type: object
+      x-apifox-orders:
+      - code
+      - message
+      - data
+      x-apifox-ignore-properties: []
+    _api_auth_login_post_401_response:
+      example:
+        code: 6.027456183070403
+        message: message
+      properties:
+        code:
+          type: number
+        message:
+          type: string
+      type: object
+      x-apifox-orders:
+      - code
+      - message
+      x-apifox-ignore-properties: []
+    _api_auth_register_post_request:
+      properties:
+        studentId:
+          description: 学号
+          type: string
+          x-apifox-mock: "{{$string.numeric}}"
+        name:
+          description: 真实姓名
+          type: string
+        email:
+          format: email
+          type: string
+          x-apifox-mock: "{{$internet.email}}"
+        username:
+          description: 用户名，必须为字符。不填默认姓名
+          type: string
+          x-apifox-mock: "{{$string.alpha}}"
+        major:
+          description: 专业
+          type: string
+        phoneNumber:
+          description: 不加区号
+          type: number
+          x-apifox-mock: "{{$phone.mobile}}"
+        password:
+          type: string
+      required:
+      - email
+      - name
+      - password
+      - studentId
+      type: object
+      x-apifox-orders:
+      - studentId
+      - name
+      - email
+      - username
+      - major
+      - phoneNumber
+      - password
+      x-apifox-ignore-properties: []
+    _api_auth_register_post_200_response_data:
+      example:
+        userId: userId
+      properties:
+        userId:
+          type: string
+      type: object
+      x-apifox-orders:
+      - userId
+      x-apifox-ignore-properties: []
+    _api_auth_register_post_200_response:
+      example:
+        code: 0.8008281904610115
+        data:
+          userId: userId
+        message: message
+      properties:
+        code:
+          type: number
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/_api_auth_register_post_200_response_data'
+      type: object
+      x-apifox-orders:
+      - code
+      - message
+      - data
+      x-apifox-ignore-properties: []
+    _api_user_info_get_200_response_data:
+      example:
+        studentId: studentId
+        createdAt: 2000-01-23T04:56:07.000+00:00
+        phoneNumber: 6.027456183070403
+        major: major
+        name: name
+        userType: userType
+        avatar: avatar
+        department: department
+        userId: userId
+        email: email
+        username: username
+      properties:
+        userId:
+          type: string
+        username:
+          type: string
+        name:
+          type: string
+        email:
+          type: string
+        userType:
+          description: 用户类型
+          type: string
+        studentId:
+          nullable: true
+          type: string
+        major:
+          description: 专业
+          nullable: true
+          type: string
+        department:
+          description: 部门
+          nullable: true
+          type: string
+        avatar:
+          description: 头像URL
+          nullable: true
+          type: string
+        phoneNumber:
+          type: number
+        createdAt:
+          format: date-time
+          type: string
+      required:
+      - userType
+      type: object
+      x-apifox-orders:
+      - userId
+      - username
+      - name
+      - email
+      - userType
+      - studentId
+      - major
+      - department
+      - avatar
+      - phoneNumber
+      - createdAt
+      x-apifox-ignore-properties: []
+    _api_user_info_get_200_response:
+      example:
+        code: 0.8008281904610115
+        data:
+          studentId: studentId
+          createdAt: 2000-01-23T04:56:07.000+00:00
+          phoneNumber: 6.027456183070403
+          major: major
+          name: name
+          userType: userType
+          avatar: avatar
+          department: department
+          userId: userId
+          email: email
+          username: username
+        message: message
+      properties:
+        code:
+          type: number
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/_api_user_info_get_200_response_data'
+      type: object
+      x-apifox-orders:
+      - code
+      - message
+      - data
+      x-apifox-ignore-properties: []
+    _api_user_info_put_request:
+      properties:
+        name:
+          type: string
+        email:
+          format: email
+          type: string
+        phoneNumber:
+          type: number
+          x-apifox-mock: "{{$phone.mobile}}"
+        username:
+          type: string
+        major:
+          type: string
+        department:
+          type: string
+      required:
+      - department
+      - email
+      - major
+      - name
+      - phoneNumber
+      - username
+      type: object
+      x-apifox-orders:
+      - name
+      - email
+      - phoneNumber
+      - username
+      - major
+      - department
+      x-apifox-refs: {}
+      x-apifox-ignore-properties: []
+    _api_upload_image_post_request:
+      properties:
+        image:
+          description: 图片文件
+          example: !!binary ""
+          format: binary
+          type: string
+      required:
+      - image
+      type: object
+    _api_upload_image_post_200_response_data:
+      example:
+        imageId: imageId
+        url: url
+      properties:
+        imageId:
+          type: string
+        url:
+          description: 图片访问URL
+          type: string
+      type: object
+      x-apifox-orders:
+      - imageId
+      - url
+      x-apifox-ignore-properties: []
+    _api_upload_image_post_200_response:
+      example:
+        code: 0.8008281904610115
+        data:
+          imageId: imageId
+          url: url
+        message: message
+      properties:
+        code:
+          type: number
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/_api_upload_image_post_200_response_data'
+      type: object
+      x-apifox-orders:
+      - code
+      - message
+      - data
+      x-apifox-ignore-properties: []
+    _api_feedback_get_200_response_data_list_inner:
+      example:
+        createdAt: 2000-01-23T04:56:07.000+00:00
+        urgency: urgency
+        id: id
+        isSpam: isSpam
+        title: title
+        category: category
+        status: status
+        updatedAt: 2000-01-23T04:56:07.000+00:00
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        category:
+          type: string
+        urgency:
+          type: string
+        status:
+          type: string
+        isSpam:
+          type: string
+        createdAt:
+          format: date-time
+          type: string
+        updatedAt:
+          format: date-time
+          type: string
+      required:
+      - isSpam
+      type: object
+      x-apifox-orders:
+      - id
+      - title
+      - category
+      - urgency
+      - status
+      - isSpam
+      - createdAt
+      - updatedAt
+      x-apifox-ignore-properties: []
+    _api_feedback_get_200_response_data:
+      example:
+        total: 6.027456183070403
+        pages: 1.4658129805029452
+        list:
+        - createdAt: 2000-01-23T04:56:07.000+00:00
+          urgency: urgency
+          id: id
+          isSpam: isSpam
+          title: title
+          category: category
+          status: status
+          updatedAt: 2000-01-23T04:56:07.000+00:00
+        - createdAt: 2000-01-23T04:56:07.000+00:00
+          urgency: urgency
+          id: id
+          isSpam: isSpam
+          title: title
+          category: category
+          status: status
+          updatedAt: 2000-01-23T04:56:07.000+00:00
+      properties:
+        total:
+          type: number
+        pages:
+          type: number
+        list:
+          items:
+            $ref: '#/components/schemas/_api_feedback_get_200_response_data_list_inner'
+          type: array
+      type: object
+      x-apifox-orders:
+      - total
+      - pages
+      - list
+      x-apifox-ignore-properties: []
+    _api_feedback_get_200_response:
+      example:
+        code: 0.8008281904610115
+        data:
+          total: 6.027456183070403
+          pages: 1.4658129805029452
+          list:
+          - createdAt: 2000-01-23T04:56:07.000+00:00
+            urgency: urgency
+            id: id
+            isSpam: isSpam
+            title: title
+            category: category
+            status: status
+            updatedAt: 2000-01-23T04:56:07.000+00:00
+          - createdAt: 2000-01-23T04:56:07.000+00:00
+            urgency: urgency
+            id: id
+            isSpam: isSpam
+            title: title
+            category: category
+            status: status
+            updatedAt: 2000-01-23T04:56:07.000+00:00
+        message: message
+      properties:
+        code:
+          type: number
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/_api_feedback_get_200_response_data'
+      type: object
+      x-apifox-orders:
+      - code
+      - message
+      - data
+      x-apifox-ignore-properties: []
+    _api_feedback_post_request:
+      properties:
+        title:
+          type: string
+        category:
+          description: 分类
+          enum:
+          - light
+          - air_conditioner
+          - water
+          - furniture
+          - network
+          - other
+          type: string
+        urgency:
+          description: 紧急程度
+          enum:
+          - low
+          - medium
+          - high
+          type: string
+        content:
+          type: string
+        isAnonymous:
+          default: false
+          description: 匿名
+          type: boolean
+        imageIds:
+          items:
+            type: string
+          type: array
+      required:
+      - category
+      - content
+      - title
+      - urgency
+      type: object
+      x-apifox-orders:
+      - title
+      - category
+      - urgency
+      - content
+      - isAnonymous
+      - imageIds
+      x-apifox-ignore-properties: []
+    _api_feedback_post_200_response_data:
+      example:
+        feedbackId: feedbackId
+      properties:
+        feedbackId:
+          type: string
+      type: object
+      x-apifox-orders:
+      - feedbackId
+      x-apifox-ignore-properties: []
+    _api_feedback_post_200_response:
+      example:
+        code: 0.8008281904610115
+        data:
+          feedbackId: feedbackId
+        message: message
+      properties:
+        code:
+          type: number
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/_api_feedback_post_200_response_data'
+      type: object
+      x-apifox-orders:
+      - code
+      - message
+      - data
+      x-apifox-ignore-properties: []
+    _api_feedback__id__get_200_response_data_images_inner:
+      example:
+        id: id
+        url: url
+      properties:
+        id:
+          type: string
+        url:
+          type: string
+      type: object
+      x-apifox-orders:
+      - id
+      - url
+      x-apifox-ignore-properties: []
+    _api_feedback__id__get_200_response_data_creator:
+      description: 创建者
+      example:
+        name: name
+        id: id
+        avatar: avatar
+      properties:
+        id:
+          type: string
+        name:
+          description: 匿名则返回匿名
+          type: string
+        avatar:
+          description: 匿名则返回空头像/默认头像
+          type: string
+      title: 创建者
+      type: object
+      x-apifox-orders:
+      - id
+      - name
+      - avatar
+      x-apifox-ignore-properties: []
+    _api_feedback__id__get_200_response_data_handler:
+      description: 接单人
+      example:
+        createdAt: 2000-01-23T04:56:07.000+00:00
+        phoneNumber: phoneNumber
+        name: name
+        id: id
+      nullable: true
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        phoneNumber:
+          type: string
+        createdAt:
+          description: 接单时间
+          format: date-time
+          title: 接单时间
+          type: string
+      title: 接单人
+      type: object
+      x-apifox-orders:
+      - id
+      - name
+      - phoneNumber
+      - createdAt
+      x-apifox-ignore-properties: []
+    _api_feedback__id__get_200_response_data_replies_inner_images_inner:
+      example:
+        url: url
+      properties:
+        url:
+          type: string
+      type: object
+      x-apifox-orders:
+      - url
+      x-apifox-ignore-properties: []
+    _api_feedback__id__get_200_response_data_replies_inner:
+      example:
+        createdAt: 2000-01-23T04:56:07.000+00:00
+        creator: creator
+        images:
+        - url: url
+        - url: url
+        content: content
+      properties:
+        content:
+          type: string
+        creator:
+          type: string
+        images:
+          items:
+            $ref: '#/components/schemas/_api_feedback__id__get_200_response_data_replies_inner_images_inner'
+          nullable: true
+          type: array
+        createdAt:
+          format: date-time
+          type: string
+      type: object
+      x-apifox-orders:
+      - content
+      - creator
+      - images
+      - createdAt
+      x-apifox-ignore-properties: []
+    _api_feedback__id__get_200_response_data_evaluation:
+      description: 评价
+      example:
+        score: 6.027456183070403
+        createdAt: 2000-01-23T04:56:07.000+00:00
+        comment: comment
+      nullable: true
+      properties:
+        score:
+          type: number
+        comment:
+          type: string
+        createdAt:
+          format: date-time
+          type: string
+      title: 评价
+      type: object
+      x-apifox-orders:
+      - score
+      - comment
+      - createdAt
+      x-apifox-ignore-properties: []
+    _api_feedback__id__get_200_response_data:
+      example:
+        handler:
+          createdAt: 2000-01-23T04:56:07.000+00:00
+          phoneNumber: phoneNumber
+          name: name
+          id: id
+        images:
+        - id: id
+          url: url
+        - id: id
+          url: url
+        creator:
+          name: name
+          id: id
+          avatar: avatar
+        title: title
+        content: content
+        evaluation:
+          score: 6.027456183070403
+          createdAt: 2000-01-23T04:56:07.000+00:00
+          comment: comment
+        createdAt: 2000-01-23T04:56:07.000+00:00
+        isAnonymous: true
+        replies:
+        - createdAt: 2000-01-23T04:56:07.000+00:00
+          creator: creator
+          images:
+          - url: url
+          - url: url
+          content: content
+        - createdAt: 2000-01-23T04:56:07.000+00:00
+          creator: creator
+          images:
+          - url: url
+          - url: url
+          content: content
+        urgency: urgency
+        id: id
+        category: category
+        status: status
+        updatedAt: 2000-01-23T04:56:07.000+00:00
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        category:
+          description: 分类
+          title: 分类
+          type: string
+        urgency:
+          description: 紧急
+          title: 紧急
+          type: string
+        content:
+          description: 正文
+          title: 正文
+          type: string
+        status:
+          description: 状态
+          title: 状态
+          type: string
+        isAnonymous:
+          description: 匿名
+          title: 匿名
+          type: boolean
+        images:
+          items:
+            $ref: '#/components/schemas/_api_feedback__id__get_200_response_data_images_inner'
+          nullable: true
+          type: array
+        creator:
+          $ref: '#/components/schemas/_api_feedback__id__get_200_response_data_creator'
+        handler:
+          $ref: '#/components/schemas/_api_feedback__id__get_200_response_data_handler'
+        replies:
+          description: 回复（接单人
+          items:
+            $ref: '#/components/schemas/_api_feedback__id__get_200_response_data_replies_inner'
+          nullable: true
+          title: 回复（接单人
+          type: array
+        evaluation:
+          $ref: '#/components/schemas/_api_feedback__id__get_200_response_data_evaluation'
+        createdAt:
+          format: date-time
+          type: string
+        updatedAt:
+          format: date-time
+          type: string
+      required:
+      - category
+      - content
+      - creator
+      - evaluation
+      - handler
+      - id
+      - images
+      - isAnonymous
+      - replies
+      - status
+      - title
+      - urgency
+      type: object
+      x-apifox-orders:
+      - id
+      - title
+      - category
+      - urgency
+      - content
+      - status
+      - isAnonymous
+      - images
+      - creator
+      - handler
+      - replies
+      - evaluation
+      - createdAt
+      - updatedAt
+      x-apifox-ignore-properties: []
+    _api_feedback__id__get_200_response:
+      example:
+        code: 0.8008281904610115
+        data:
+          handler:
+            createdAt: 2000-01-23T04:56:07.000+00:00
+            phoneNumber: phoneNumber
+            name: name
+            id: id
+          images:
+          - id: id
+            url: url
+          - id: id
+            url: url
+          creator:
+            name: name
+            id: id
+            avatar: avatar
+          title: title
+          content: content
+          evaluation:
+            score: 6.027456183070403
+            createdAt: 2000-01-23T04:56:07.000+00:00
+            comment: comment
+          createdAt: 2000-01-23T04:56:07.000+00:00
+          isAnonymous: true
+          replies:
+          - createdAt: 2000-01-23T04:56:07.000+00:00
+            creator: creator
+            images:
+            - url: url
+            - url: url
+            content: content
+          - createdAt: 2000-01-23T04:56:07.000+00:00
+            creator: creator
+            images:
+            - url: url
+            - url: url
+            content: content
+          urgency: urgency
+          id: id
+          category: category
+          status: status
+          updatedAt: 2000-01-23T04:56:07.000+00:00
+        message: message
+      properties:
+        code:
+          type: number
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/_api_feedback__id__get_200_response_data'
+      type: object
+      x-apifox-orders:
+      - code
+      - message
+      - data
+      x-apifox-ignore-properties: []
+    _api_feedback__id__accept_put_request:
+      properties:
+        accept:
+          description: true-接单，false-撤销接单
+          type: boolean
+      required:
+      - accept
+      type: object
+      x-apifox-orders:
+      - accept
+      x-apifox-ignore-properties: []
+    _api_feedback__id__mark_spam_post_request:
+      properties:
+        markSpam:
+          type: boolean
+        reason:
+          type: string
+      required:
+      - markSpam
+      - reason
+      type: object
+      x-apifox-orders:
+      - markSpam
+      - reason
+      x-apifox-ignore-properties: []
+    _api_feedback__id__reply_post_request_images:
+      properties:
+        id:
+          type: string
+      type: object
+      x-apifox-orders:
+      - id
+      x-apifox-ignore-properties: []
+    _api_feedback__id__reply_post_request:
+      properties:
+        content:
+          description: 回复内容（预设也用此传入
+          title: 回复内容（预设也用此传入
+          type: string
+        status:
+          enum:
+          - processing
+          - resolved
+          - rejected
+          type: string
+        images:
+          $ref: '#/components/schemas/_api_feedback__id__reply_post_request_images'
+      type: object
+      x-apifox-orders:
+      - content
+      - status
+      - images
+      x-apifox-ignore-properties: []
+    _api_feedback__id__evaluate_post_request:
+      properties:
+        score:
+          maximum: 5
+          minimum: 1
+          type: number
+        comment:
+          type: string
+      required:
+      - score
+      type: object
+      x-apifox-orders:
+      - score
+      - comment
+      x-apifox-ignore-properties: []
+    _api_admin_users_get_200_response_data_list_inner:
+      example:
+        createdAt: 2000-01-23T04:56:07.000+00:00
+        name: name
+        id: id
+        userType: userType
+        email: email
+        username: username
+        status: active
+      properties:
+        id:
+          type: string
+        username:
+          type: string
+        name:
+          type: string
+        email:
+          type: string
+        userType:
+          type: string
+        status:
+          enum:
+          - active
+          - inactive
+          type: string
+        createdAt:
+          format: date-time
+          type: string
+      type: object
+      x-apifox-orders:
+      - id
+      - username
+      - name
+      - email
+      - userType
+      - status
+      - createdAt
+      x-apifox-ignore-properties: []
+    _api_admin_users_get_200_response_data:
+      example:
+        total: 6.027456183070403
+        pages: 1.4658129805029452
+        list:
+        - createdAt: 2000-01-23T04:56:07.000+00:00
+          name: name
+          id: id
+          userType: userType
+          email: email
+          username: username
+          status: active
+        - createdAt: 2000-01-23T04:56:07.000+00:00
+          name: name
+          id: id
+          userType: userType
+          email: email
+          username: username
+          status: active
+      properties:
+        total:
+          type: number
+        pages:
+          type: number
+        list:
+          items:
+            $ref: '#/components/schemas/_api_admin_users_get_200_response_data_list_inner'
+          type: array
+      type: object
+      x-apifox-orders:
+      - total
+      - pages
+      - list
+      x-apifox-ignore-properties: []
+    _api_admin_users_get_200_response:
+      example:
+        code: 0.8008281904610115
+        data:
+          total: 6.027456183070403
+          pages: 1.4658129805029452
+          list:
+          - createdAt: 2000-01-23T04:56:07.000+00:00
+            name: name
+            id: id
+            userType: userType
+            email: email
+            username: username
+            status: active
+          - createdAt: 2000-01-23T04:56:07.000+00:00
+            name: name
+            id: id
+            userType: userType
+            email: email
+            username: username
+            status: active
+        message: message
+      properties:
+        code:
+          type: number
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/_api_admin_users_get_200_response_data'
+      type: object
+      x-apifox-orders:
+      - code
+      - message
+      - data
+      x-apifox-ignore-properties: []
+    _api_admin_users_post_request:
+      properties:
+        userType:
+          description: 用户类型，在后端自动定义权限管理
+          enum:
+          - admin
+          title: 用户类型
+          type: string
+        name:
+          description: 姓名
+          title: 姓名
+          type: string
+        password:
+          description: 空则为 abc123456
+          nullable: true
+          type: string
+        username:
+          description: 昵称，留空默认为name
+          nullable: true
+          title: 昵称
+          type: string
+        phoneNumber:
+          type: string
+        email:
+          format: email
+          type: string
+        studentId:
+          description: 管理员不需要
+          nullable: true
+          type: string
+        department:
+          nullable: true
+          type: string
+        major:
+          nullable: true
+          type: string
+      required:
+      - department
+      - email
+      - major
+      - name
+      - password
+      - phoneNumber
+      - userType
+      - username
+      type: object
+      x-apifox-orders:
+      - userType
+      - name
+      - password
+      - username
+      - phoneNumber
+      - email
+      - studentId
+      - department
+      - major
+      x-apifox-ignore-properties: []
+    _api_admin_users_post_200_response_data:
+      example:
+        name: name
+        id: 6.027456183070403
+      properties:
+        id:
+          type: number
+        name:
+          type: string
+      type: object
+      x-apifox-orders:
+      - id
+      - name
+      x-apifox-ignore-properties: []
+    _api_admin_users_post_200_response:
+      example:
+        code: 0.8008281904610115
+        data:
+          name: name
+          id: 6.027456183070403
+        message: message
+      properties:
+        code:
+          type: number
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/_api_admin_users_post_200_response_data'
+      type: object
+      x-apifox-orders:
+      - code
+      - message
+      - data
+      x-apifox-ignore-properties: []
+    _api_admin_users__id__put_request:
+      properties:
+        name:
+          type: string
+        email:
+          format: email
+          type: string
+        userType:
+          enum:
+          - admin
+          type: string
+        department:
+          type: string
+        status:
+          enum:
+          - active
+          - inactive
+          type: string
+        password:
+          description: 可选，不填则不修改密码
+          type: string
+      type: object
+      x-apifox-orders:
+      - name
+      - email
+      - userType
+      - department
+      - status
+      - password
+      x-apifox-ignore-properties: []
+    _api_admin_users__id__permission_get_200_response_data:
+      example:
+        name: name
+        permission: permission
+        userType: userType
+        department: department
+        userId: userId
+      properties:
+        userId:
+          type: string
+        name:
+          type: string
+        userType:
+          type: string
+        department:
+          type: string
+        permission:
+          type: string
+      required:
+      - department
+      - name
+      - permission
+      - userId
+      - userType
+      type: object
+      x-apifox-orders:
+      - userId
+      - name
+      - userType
+      - department
+      - permission
+      x-apifox-ignore-properties: []
+    _api_admin_users__id__permission_get_200_response:
+      example:
+        code: 0
+        data:
+          name: name
+          permission: permission
+          userType: userType
+          department: department
+          userId: userId
+        message: message
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/_api_admin_users__id__permission_get_200_response_data'
+      required:
+      - code
+      - data
+      - message
+      type: object
+      x-apifox-orders:
+      - code
+      - message
+      - data
+      x-apifox-ignore-properties: []
+    _api_admin_users__id__permission_put_request:
+      properties:
+        id:
+          type: string
+        permission:
+          type: string
+      required:
+      - id
+      - permission
+      type: object
+      x-apifox-orders:
+      - id
+      - permission
+      x-apifox-ignore-properties: []
+    _api_admin_users__id__permission_put_200_response_data:
+      example:
+        name: name
+        permission: permission
+        userType: userType
+        department: department
+        userId: userId
+      properties:
+        userId:
+          type: string
+        name:
+          type: string
+        userType:
+          type: string
+        department:
+          type: string
+        permission:
+          description: 新的权限
+          type: string
+      required:
+      - department
+      - name
+      - permission
+      - userId
+      - userType
+      type: object
+      x-apifox-orders:
+      - userId
+      - name
+      - userType
+      - department
+      - permission
+      x-apifox-ignore-properties: []
+    _api_admin_users__id__permission_put_200_response:
+      example:
+        code: 0
+        data:
+          name: name
+          permission: permission
+          userType: userType
+          department: department
+          userId: userId
+        message: message
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/_api_admin_users__id__permission_put_200_response_data'
+      required:
+      - code
+      - data
+      - message
+      type: object
+      x-apifox-orders:
+      - code
+      - message
+      - data
+      x-apifox-ignore-properties: []
+    _api_feedback_spam_pending_get_200_response_data_list_inner:
+      example:
+        markedAt: 2000-01-23T04:56:07.000+00:00
+        id: id
+        markedBy: markedBy
+        title: title
+        content: content
+        markReason: markReason
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        content:
+          type: string
+        markedBy:
+          type: string
+        markReason:
+          type: string
+        markedAt:
+          format: date-time
+          type: string
+      type: object
+      x-apifox-orders:
+      - id
+      - title
+      - content
+      - markedBy
+      - markReason
+      - markedAt
+      x-apifox-ignore-properties: []
+    _api_feedback_spam_pending_get_200_response_data:
+      example:
+        total: 6.027456183070403
+        pages: 1.4658129805029452
+        list:
+        - markedAt: 2000-01-23T04:56:07.000+00:00
+          id: id
+          markedBy: markedBy
+          title: title
+          content: content
+          markReason: markReason
+        - markedAt: 2000-01-23T04:56:07.000+00:00
+          id: id
+          markedBy: markedBy
+          title: title
+          content: content
+          markReason: markReason
+      properties:
+        total:
+          type: number
+        pages:
+          type: number
+        list:
+          items:
+            $ref: '#/components/schemas/_api_feedback_spam_pending_get_200_response_data_list_inner'
+          type: array
+      type: object
+      x-apifox-orders:
+      - total
+      - pages
+      - list
+      x-apifox-ignore-properties: []
+    _api_feedback_spam_pending_get_200_response:
+      example:
+        code: 0.8008281904610115
+        data:
+          total: 6.027456183070403
+          pages: 1.4658129805029452
+          list:
+          - markedAt: 2000-01-23T04:56:07.000+00:00
+            id: id
+            markedBy: markedBy
+            title: title
+            content: content
+            markReason: markReason
+          - markedAt: 2000-01-23T04:56:07.000+00:00
+            id: id
+            markedBy: markedBy
+            title: title
+            content: content
+            markReason: markReason
+        message: message
+      properties:
+        code:
+          type: number
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/_api_feedback_spam_pending_get_200_response_data'
+      type: object
+      x-apifox-orders:
+      - code
+      - message
+      - data
+      x-apifox-ignore-properties: []
+    _api_feedback_spam_review_post_request:
+      properties:
+        id:
+          description: 反馈id
+          title: 反馈id
+          type: string
+        approved:
+          description: true-通过，false-驳回
+          type: boolean
+      required:
+      - approved
+      - id
+      type: object
+      x-apifox-orders:
+      - id
+      - approved
+      x-apifox-ignore-properties: []
+    _api_feedback_spam_review_post_200_response:
+      example:
+        code: 0.8008281904610115
+        message: message
+        type: type
+      properties:
+        code:
+          type: number
+        message:
+          type: string
+        type:
+          description: 标记成功时返回 值：标记的类型
+          type: string
+      type: object
+      x-apifox-orders:
+      - code
+      - message
+      - type
+      x-apifox-ignore-properties: []
+    _api_reply_templates_get_200_response_data_inner:
+      example:
+        id: 6.027456183070403
+        title: title
+        content: content
+      properties:
+        id:
+          description: 预设序号
+          type: number
+        title:
+          description: 叫备注更贴切
+          type: string
+        content:
+          description: 回复内容
+          type: string
+      type: object
+      x-apifox-orders:
+      - id
+      - title
+      - content
+      x-apifox-ignore-properties: []
+    _api_reply_templates_get_200_response:
+      example:
+        code: 0.8008281904610115
+        data:
+        - id: 6.027456183070403
+          title: title
+          content: content
+        - id: 6.027456183070403
+          title: title
+          content: content
+        message: message
+      properties:
+        code:
+          type: number
+        message:
+          type: string
+        data:
+          items:
+            $ref: '#/components/schemas/_api_reply_templates_get_200_response_data_inner'
+          type: array
+      type: object
+      x-apifox-orders:
+      - code
+      - message
+      - data
+      x-apifox-ignore-properties: []
+    _api_reply_templates_put_request:
+      properties:
+        id:
+          type: number
+        title:
+          nullable: true
+          type: string
+        content:
+          nullable: true
+          type: string
+      required:
+      - content
+      - id
+      - title
+      type: object
+      x-apifox-orders:
+      - id
+      - title
+      - content
+      x-apifox-ignore-properties: []
+    _api_reply_templates_post_request:
+      properties:
+        title:
+          description: 备注
+          type: string
+        content:
+          type: string
+      required:
+      - content
+      - title
+      type: object
+      x-apifox-orders:
+      - title
+      - content
+      x-apifox-ignore-properties: []
+    _api_reply_templates_post_200_response_data:
+      example:
+        id: 6.027456183070403
+      properties:
+        id:
+          type: number
+      type: object
+      x-apifox-orders:
+      - id
+      x-apifox-ignore-properties: []
+    _api_reply_templates_post_200_response:
+      example:
+        code: 0.8008281904610115
+        data:
+          id: 6.027456183070403
+        message: message
+      properties:
+        code:
+          type: number
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/_api_reply_templates_post_200_response_data'
+      type: object
+      x-apifox-orders:
+      - code
+      - message
+      - data
+      x-apifox-ignore-properties: []
+    _api_reply_templates_delete_request:
+      properties:
+        id:
+          type: number
+      required:
+      - id
+      type: object
+      x-apifox-orders:
+      - id
+      x-apifox-ignore-properties: []
+    _api_feedback_admin_get_200_response_data_list_inner:
+      example:
+        handler: handler
+        createdAt: 2000-01-23T04:56:07.000+00:00
+        creator: creator
+        urgency: urgency
+        id: id
+        title: title
+        category: category
+        status: status
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        category:
+          type: string
+        urgency:
+          type: string
+        status:
+          type: string
+        creator:
+          type: string
+        handler:
+          nullable: true
+          type: string
+        createdAt:
+          format: date-time
+          type: string
+      type: object
+      x-apifox-orders:
+      - id
+      - title
+      - category
+      - urgency
+      - status
+      - creator
+      - handler
+      - createdAt
+      x-apifox-ignore-properties: []
+    _api_feedback_admin_get_200_response_data:
+      example:
+        total: 6.027456183070403
+        pages: 1.4658129805029452
+        list:
+        - handler: handler
+          createdAt: 2000-01-23T04:56:07.000+00:00
+          creator: creator
+          urgency: urgency
+          id: id
+          title: title
+          category: category
+          status: status
+        - handler: handler
+          createdAt: 2000-01-23T04:56:07.000+00:00
+          creator: creator
+          urgency: urgency
+          id: id
+          title: title
+          category: category
+          status: status
+      properties:
+        total:
+          type: number
+        pages:
+          type: number
+        list:
+          items:
+            $ref: '#/components/schemas/_api_feedback_admin_get_200_response_data_list_inner'
+          type: array
+      type: object
+      x-apifox-orders:
+      - total
+      - pages
+      - list
+      x-apifox-ignore-properties: []
+    _api_feedback_admin_get_200_response:
+      example:
+        code: 0.8008281904610115
+        data:
+          total: 6.027456183070403
+          pages: 1.4658129805029452
+          list:
+          - handler: handler
+            createdAt: 2000-01-23T04:56:07.000+00:00
+            creator: creator
+            urgency: urgency
+            id: id
+            title: title
+            category: category
+            status: status
+          - handler: handler
+            createdAt: 2000-01-23T04:56:07.000+00:00
+            creator: creator
+            urgency: urgency
+            id: id
+            title: title
+            category: category
+            status: status
+        message: message
+      properties:
+        code:
+          type: number
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/_api_feedback_admin_get_200_response_data'
+      type: object
+      x-apifox-orders:
+      - code
+      - message
+      - data
+      x-apifox-ignore-properties: []
+    _api_statistics_feedback_get_200_response_data_categoryDistribution_inner:
+      example:
+        percentage: 5.962133916683182
+        count: 1.4658129805029452
+        category: category
+      properties:
+        category:
+          type: string
+        count:
+          type: number
+        percentage:
+          type: number
+      type: object
+      x-apifox-orders:
+      - category
+      - count
+      - percentage
+      x-apifox-ignore-properties: []
+    _api_statistics_feedback_get_200_response_data_statusDistribution_inner:
+      example:
+        count: 5.637376656633329
+        status: status
+      properties:
+        status:
+          type: string
+        count:
+          type: number
+      type: object
+      x-apifox-orders:
+      - status
+      - count
+      x-apifox-ignore-properties: []
+    _api_statistics_feedback_get_200_response_data_dailyTrend_inner:
+      example:
+        date: date
+        count: 2.3021358869347655
+      properties:
+        date:
+          type: string
+        count:
+          type: number
+      type: object
+      x-apifox-orders:
+      - date
+      - count
+      x-apifox-ignore-properties: []
+    _api_statistics_feedback_get_200_response_data_handlerPerformance_inner:
+      example:
+        handler: handler
+        averageTime: 3.616076749251911
+        count: 9.301444243932576
+      properties:
+        handler:
+          type: string
+        count:
+          type: number
+        averageTime:
+          type: number
+      type: object
+      x-apifox-orders:
+      - handler
+      - count
+      - averageTime
+      x-apifox-ignore-properties: []
+    _api_statistics_feedback_get_200_response_data:
+      example:
+        handlerPerformance:
+        - handler: handler
+          averageTime: 3.616076749251911
+          count: 9.301444243932576
+        - handler: handler
+          averageTime: 3.616076749251911
+          count: 9.301444243932576
+        statusDistribution:
+        - count: 5.637376656633329
+          status: status
+        - count: 5.637376656633329
+          status: status
+        totalCount: 6.027456183070403
+        averageProcessingTime: 7.061401241503109
+        categoryDistribution:
+        - percentage: 5.962133916683182
+          count: 1.4658129805029452
+          category: category
+        - percentage: 5.962133916683182
+          count: 1.4658129805029452
+          category: category
+        dailyTrend:
+        - date: date
+          count: 2.3021358869347655
+        - date: date
+          count: 2.3021358869347655
+      properties:
+        totalCount:
+          type: number
+        categoryDistribution:
+          items:
+            $ref: '#/components/schemas/_api_statistics_feedback_get_200_response_data_categoryDistribution_inner'
+          type: array
+        statusDistribution:
+          items:
+            $ref: '#/components/schemas/_api_statistics_feedback_get_200_response_data_statusDistribution_inner'
+          type: array
+        dailyTrend:
+          items:
+            $ref: '#/components/schemas/_api_statistics_feedback_get_200_response_data_dailyTrend_inner'
+          type: array
+        averageProcessingTime:
+          type: number
+        handlerPerformance:
+          items:
+            $ref: '#/components/schemas/_api_statistics_feedback_get_200_response_data_handlerPerformance_inner'
+          type: array
+      type: object
+      x-apifox-orders:
+      - totalCount
+      - categoryDistribution
+      - statusDistribution
+      - dailyTrend
+      - averageProcessingTime
+      - handlerPerformance
+      x-apifox-ignore-properties: []
+    _api_statistics_feedback_get_200_response:
+      example:
+        code: 0.8008281904610115
+        data:
+          handlerPerformance:
+          - handler: handler
+            averageTime: 3.616076749251911
+            count: 9.301444243932576
+          - handler: handler
+            averageTime: 3.616076749251911
+            count: 9.301444243932576
+          statusDistribution:
+          - count: 5.637376656633329
+            status: status
+          - count: 5.637376656633329
+            status: status
+          totalCount: 6.027456183070403
+          averageProcessingTime: 7.061401241503109
+          categoryDistribution:
+          - percentage: 5.962133916683182
+            count: 1.4658129805029452
+            category: category
+          - percentage: 5.962133916683182
+            count: 1.4658129805029452
+            category: category
+          dailyTrend:
+          - date: date
+            count: 2.3021358869347655
+          - date: date
+            count: 2.3021358869347655
+        message: message
+      properties:
+        code:
+          type: number
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/_api_statistics_feedback_get_200_response_data'
+      type: object
+      x-apifox-orders:
+      - code
+      - message
+      - data
+      x-apifox-ignore-properties: []
+    YongHuXinXi_data:
+      properties:
+        userId:
+          type: string
+        username:
+          type: string
+        name:
+          type: string
+        email:
+          type: string
+        userType:
+          type: string
+        studentId:
+          nullable: true
+          type: string
+        major:
+          nullable: true
+          type: string
+        department:
+          nullable: true
+          type: string
+        avatar:
+          description: 头像
+          nullable: true
+          type: string
+        phoneNumber:
+          type: number
+      type: object
+      x-apifox-orders:
+      - userId
+      - username
+      - name
+      - email
+      - userType
+      - studentId
+      - major
+      - department
+      - avatar
+      - phoneNumber
+      x-apifox-ignore-properties: []
+  securitySchemes: {}
